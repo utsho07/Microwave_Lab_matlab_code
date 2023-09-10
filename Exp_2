@@ -1,0 +1,44 @@
+To observe frequency spectrum of AM
+code:
+clc
+clc
+close all
+Ts=1/1000;
+t=0:Ts:1;
+N=length(t);
+f=0:(floor(N/2));
+fm=input('Enter the message signal frequency: ');
+fc=input('Enter the carrier signal frequency: ');
+Vm=input('Enter the message signal amplitude: ');
+Vc=input('Enter the carrier signal amplitude: ');
+Wm=2*pi*fm;
+Wc=2*pi*fc;
+m=Vm/Vc;
+
+Xm=Vm*sin(Wm*t);
+subplot(411);
+plot(t,Xm,'r');
+xlabel('Time');
+ylabel('Amplitude');
+title('Message signal');
+
+Xc=Vc*sin(Wc*t);
+subplot(412);
+plot(t,Xc,'black');
+xlabel('Time');
+ylabel('Amplitude');
+title('Carrier signal');
+AM=Vc.*(1+m.*sin(Wm.*t)).*sin(Wc.*t);
+subplot(413);
+plot(t,AM,'m');
+xlabel('Time');
+ylabel('Amplitude');
+title('Amplitude modulated signal');
+
+x=fft(AM,N);
+x_shift=x(1:(floor(N/2))+1);
+subplot(414);
+stem(f,abs(x_shift),'b');
+xlabel('Frequency');
+ylabel('Amplitude');
+title('Frequency spectrum of AM ');
