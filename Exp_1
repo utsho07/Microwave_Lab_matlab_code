@@ -1,0 +1,31 @@
+To observe amplitude modulation:
+code:
+clc
+close all
+Am=input('Enter message signal amplitude: ');%message signal amplitude
+Ac=input('Enter carrier signal amplitude: ');%carrier signal amplitude
+fm=input('Enter message frequency: ');% fm<fc message signal frequency
+fc=input('Enter carrier frequency: ');%carrier signal frequency
+%m=input('Enter modulation index: ');
+t=input('Enter time period: ');%time period
+m=Am/Ac;%modulation index
+t1=linspace(0,t,1000);
+y1=sin(2*pi*fm*t1); % message signal
+y2=sin(2*pi*fc*t1); % carrier signal
+eq=(1+m.*y1).*(Ac.*y2);%modulated signal
+subplot(311);
+plot(t1,y1);
+xlabel('Time');
+ylabel('Amplitude');
+title('Message signal')
+subplot(312)
+plot(t1,y2);
+xlabel('Time');
+ylabel('Amplitude');
+title('Carrier signal');
+subplot(313);
+plot(t1,eq);
+plot(t1,eq,'r');
+xlabel('Time');
+ylabel('Amplitude');
+title('Modulated signal');
