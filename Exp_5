@@ -1,18 +1,10 @@
-To extract information signal from modulated wave using diode detector
-code:
-
-%Diode detector
-clc;
-close all;
-t=0:0.001:1;
-N=length(t);
-f=0:(floor(N/2));
+%information extract from AM
+fs=1000;
+t=0:1/fs:1;
 fm=input('Enter the message signal frequency: ');
 fc=input('Enter the carrier signal frequency: ');
 Vm=input('Enter the message signal amplitude: ');
 Vc=input('Enter the carrier signal amplitude: ');
-fs=500;
-cutoff_frequency = 10;
 Wm=2*pi*fm;
 Wc=2*pi*fc;
 m=Vm/Vc;
@@ -21,7 +13,7 @@ m=Vm/Vc;
 Xm=Vm*sin(Wm*t);
 subplot(411);
 plot(t,Xm,'r');
-xlabel('Time');
+xlabel('Time(s)');
 ylabel('Amplitude');
 title('Message signal');
 
@@ -29,7 +21,7 @@ title('Message signal');
 Xc=Vc*sin(Wc*t);
 subplot(412);
 plot(t,Xc,'black');
-xlabel('Time');
+xlabel('Time(s)');
 ylabel('Amplitude');
 title('Carrier signal');
 
@@ -37,18 +29,18 @@ title('Carrier signal');
 AM=Vc.*(1+m.*sin(Wm.*t)).*sin(Wc.*t);
 subplot(413);
 plot(t,AM,'m');
-xlabel('Time');
+xlabel('Time(s)');
 ylabel('Amplitude');
 title('Amplitude modulated signal');
 
-%extract information
-d=abs(AM);
-normalized_cutoff = cutoff_frequency / (fs / 2);
- % 4th order Butterworth filter
-[b, a] = butter(4, normalized_cutoff, 'low');
-filtered_signal = filtfilt(b, a,d);
+% Diode Detector
+rf_signal = abs(AM); % Rectification
+tau = 0.01; % Time constant for the low-pass filter
+alpha = fs/(2*pi*tau);
+lpf = tf(alpha,[1 alpha]); % Low-pass filter transfer function
+dm_signal = lsim(lpf,rf_signal,t); % Low-pass filtering
 subplot(414);
-plot(t,filtered_signal,'m');
-xlabel('Time');
+plot(t, dm_signal,'b');
+xlabel('Time(s)');
 ylabel('Amplitude');
-title('Amplitude modulated signal');
+title('Information Signal, Extracting using Diode Detector');
